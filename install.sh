@@ -23,7 +23,7 @@ fqdn="$1"
 email="$2"
 
 # Bash 的 IF 分支： if then .. fi
-# if os is not ubuntu or debian, exit
+# if os is not ubuntu or debian, exit，用 grep -q "Ubuntu" /etc/issue 偵測 OS 為 Ubuntu/Debian
 if ! grep -q "Ubuntu" /etc/issue && ! grep -q "Debian" /etc/issue;
   then
     echo "This script only works on Ubuntu or Debian"
@@ -76,6 +76,7 @@ chmod +x docker-compose-linux-x86_64
 "${a_privilege[@]}" docker pull mcr.microsoft.com/dotnet/samples:aspnetapp
 
 # download /etc/nginx conf files
+# sudo sed -i "s/@fqdn/$fqdn/g" /etc/nginx/conf.d/01.aspnetcore.conf 可將檔案中的 "@fqdn" 置換成 fqdn 參數內容，由範本動態產生檔案很好用
 "${a_privilege[@]}" mkdir /etc/nginx
 "${a_privilege[@]}" mkdir /etc/nginx/conf.d
 "${a_privilege[@]}" curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/darkthread/nginx-certbot-docker-nstaller/master/etc/nginx/nginx.conf
